@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="nccpGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#005A43" />
+      <stop offset="100%" stop-color="#002D22" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5C451" />
+      <stop offset="100%" stop-color="#C78A16" />
+    </linearGradient>
+    <linearGradient id="saffronGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF9933" />
+      <stop offset="100%" stop-color="#E65100" />
+    </linearGradient>
+  </defs>
+  <!-- Background Shield / Hexagon -->
+  <rect width="64" height="64" rx="16" fill="url(#nccpGrad)" />
+  <circle cx="32" cy="32" r="28" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" stroke-dasharray="3 2" opacity="0.6"/>
+  
+  <!-- Outer Decorative Ring -->
+  <circle cx="32" cy="32" r="23" fill="none" stroke="url(#goldGrad)" stroke-width="2"/>
+  
+  <!-- Cooperative Hands / Leaves -->
+  <path d="M32 14 C37 20 44 24 44 32 C44 38 39 43 32 43 C25 43 20 38 20 32 C20 24 27 20 32 14 Z" fill="url(#goldGrad)" />
+  <circle cx="32" cy="32" r="8" fill="#FFFFFF" />
+  
+  <!-- Center Spoke Wheel (Sahakar Chakra) -->
+  <circle cx="32" cy="32" r="4.5" fill="#005A43" />
+  <path d="M32 24 L32 40 M24 32 L40 32 M26.3 26.3 L37.7 37.7 M26.3 37.7 L37.7 26.3" stroke="url(#saffronGrad)" stroke-width="1.2" stroke-linecap="round"/>
+  
+  <!-- Bottom Saffron / Green Accents -->
+  <circle cx="21" cy="46" r="3" fill="url(#saffronGrad)" />
+  <circle cx="43" cy="46" r="3" fill="#2E7D32" />
+  <circle cx="32" cy="50" r="3.5" fill="url(#goldGrad)" />
+</svg>

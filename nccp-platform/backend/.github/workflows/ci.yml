@@ -1,0 +1,30 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env: { POSTGRES_USER: nccp, POSTGRES_PASSWORD: nccp, POSTGRES_DB: nccp_test }
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U nccp" --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      NODE_ENV: test
+      RUN_DB_TESTS: '1'
+      DATABASE_URL: postgres://nccp:nccp@localhost:5432/nccp_test
+      AUTH_JWT_SECRET: test-secret-test-secret-test-secret-123
+      AUTH_COOKIE_SECRET: test-secret-test-secret-test-secret-456
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint:sql
+      - run: npm run migrate          # fresh database
+      - run: npm run migrate          # second run must be a no-op (repeatable)
+      - run: npm test
+      - run: npm run build
+      - run: npm audit --omit=dev --audit-level=high

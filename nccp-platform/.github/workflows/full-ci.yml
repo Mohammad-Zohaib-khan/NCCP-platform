@@ -1,0 +1,73 @@
+name: Full CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  backend-test:
+    name: Backend Tests & Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: nccp
+          POSTGRES_PASSWORD: nccp
+          POSTGRES_DB: nccp_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U nccp"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      NODE_ENV: test
+      RUN_DB_TESTS: '1'
+      DATABASE_URL: postgres://nccp:nccp@localhost:5432/nccp_test
+      AUTH_JWT_SECRET: test-secret-test-secret-test-secret-123
+      AUTH_COOKIE_SECRET: test-secret-test-secret-test-secret-456
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint:sql
+      - run: npm run migrate
+      - run: npm test
+      - run: npm run build
+
+  frontend-test:
+    name: Frontend Typecheck & Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm run build
+
+  docker-validate:
+    name: Validate Docker Compose
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate docker compose config
+        run: docker compose -f docker-compose.yml config
